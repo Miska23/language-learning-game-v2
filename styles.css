@@ -1,0 +1,71 @@
+
+.card-container {
+	grid-template-columns: repeat(5, 1fr);
+	/*     grid-template-rows: repeat(4, 1fr); */
+	width: 700px;
+	/* määrittää koko elementin leveyden ja tämä leveys on se joka alempana
+    jaetaan kahteen yhtä suureen osaan */
+	margin: auto;
+	/* keskittää tämän elementin sekä vertikaalisesti että horisontaalisesti */
+	/* jakaa sisällön kahteen yhtä suureen osaan, tässä tapauksessa sisältö on
+    neljä diviä, jotka ovat "kortit" */
+}
+
+.card-container > div {
+	/* määrää kaikkien korttien yhteiset ominaisuudet */
+	height: 130px;
+	margin: 1.66%;
+	border-radius: 15%;
+	border: 1px solid;
+	background-color: rgb(177, 154, 139);
+}
+
+.text-card {
+	display: none;
+	background-color: white;
+	height: 100%;
+	width: 100%;
+	border-radius: 15%;
+	text-align: center;
+	line-height: 100px;
+}
+
+.blue {
+	background: blue;
+	display: none;
+	height: 100%;
+	width: 100%;
+	border-radius: 15%;
+}
+
+.red {
+	background: red;
+	display: none;
+	height: 100%;
+	width: 100%;
+	border-radius: 15%;
+}
+
+.white{
+	background: white;
+	display: none;
+	height: 100%;
+	width: 100%;
+	border-radius: 15%;
+}
+
+.black {
+	background: black;
+	display: none;
+	height: 100%;
+	width: 100%;
+	border-radius: 15%;
+}
+
+/*! tämän luokan on tultava viimeisenä kortteihin liittyvistä luokista, 
+/*! muuten klikkaa-näytä-sulje ei toimi */
+.show {
+	display: block;
+}
+
+
