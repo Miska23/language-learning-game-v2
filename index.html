@@ -12,9 +12,90 @@
   <body>
     <header>
       Tervetuloa opettelemaan vieraita kieliä muistikorttipelin avulla!
+      <div id='new-game-info'>
+        <p>Löysit kaikki parit!</p>
+        <div id='new-game-buttons'>
+          <button data-newGameOption='playAgain' type="button">Pelaa uudelleen</button>
+          <button data-newGameOption='changeMode' type="button">Vaihda tasoa</button>
+          <button data-newGameOption='changeLanguage'type="button">Vaihda kieltä</button>
+        </div>
+      </div>  
+      <div id="language-buttons-and-text">
+        <p id="language-buttons-text">Valitse kieli</p>
+        <button class="language-button" data-lang='english' type="button">Englanti</button>
+        <button class="language-button" data-lang='french' type="button">Ranska</button>
+        <button class="language-button" data-lang='russian' type="button">Venäjä</button>
+      </div>
+      <div id='language-selection-display'></div>
+      <div id="language-text"></div>
+      <div id="mode-buttons-and-text">
+        <p id="mode-buttons-text">Valitse vaikeustaso</p>
+        <div id="mode-buttons">
+          <button class="easy-button" data-mode='easy' type="button">Helppo</button>
+          <button class="difficult-button" data-mode='difficult' type="button">Vaikea</button>
+        </div>
+      </div>
+      <div id='mode-selection-display'></div>
+      <button id="start-and-reset-button" type="button">Aloita peli</button>
     </header>
-    <section class="card-container">
+    <section class="card-container" id="easy-mode-container">
       <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div>
+      <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div>
+      <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div>
+      <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div>
+<!--       <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div>
+      <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div>
+      <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div>
+      <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div>
+       <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div>
+      <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div> -->
+    </section>
+    <section class="card-container" id="difficult-mode-container">
+      <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div>
+      <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div>
+      <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div>
+      <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div>
+      <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div>
+      <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div>
+      <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div>
+      <div class="card-backside">
+        <div class="card-frontside"></div>
+      </div>
+       <div class="card-backside">
         <div class="card-frontside"></div>
       </div>
       <div class="card-backside">
@@ -49,31 +130,7 @@
       </div>
       <div class="card-backside">
         <div class="card-frontside"></div>
-      </div>
-      <div class="card-backside">
-        <div class="card-frontside"></div>
-      </div>
-      <div class="card-backside">
-        <div class="card-frontside"></div>
-      </div>
-      <div class="card-backside">
-        <div class="card-frontside"></div>
-      </div>
-      <div class="card-backside">
-        <div class="card-frontside"></div>
-      </div>
-      <div class="card-backside">
-        <div class="card-frontside"></div>
-      </div>
-      <div class="card-backside">
-        <div class="card-frontside"></div>
-      </div>
-      <div class="card-backside">
-        <div class="card-frontside"></div>
-      </div>
-      <div class="card-backside">
-        <div class="card-frontside"></div>
-      </div>
+      </div> 
     </section>
   </body>
 
