@@ -16,9 +16,9 @@ export const newGameInfo = document.getElementById('new-game-info');
 
 export const newGameButtons = document.getElementById('new-game-buttons');
 
-export const backsEasyMode = Array.from(document.getElementById('easy-mode-container').querySelectorAll(".card-backside"));
+export const backsEasy = Array.from(document.getElementById('easy-mode-container').querySelectorAll(".card-backside"));
 
-export const backsDifficultMode = Array.from(document.getElementById('difficult-mode-container').querySelectorAll(".card-backside"));
+export const backsDifficult = Array.from(document.getElementById('difficult-mode-container').querySelectorAll(".card-backside"));
 
 export const frontsEasy = Array.from(document.getElementById('easy-mode-container').querySelectorAll(".card-frontside"));
 

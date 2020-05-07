@@ -30,6 +30,7 @@ header {
 }
 
 .card-container {
+  display: grid;
 	grid-template-columns: repeat(5, 1fr);
 	/*     grid-template-rows: repeat(4, 1fr); */
 	width: 700px;
@@ -41,11 +42,7 @@ header {
     neljä diviä, jotka ovat "kortit" */
 }
 
-#easy-mode-container {
-  display: none;
-}
-
-#difficult-mode-container {
+.hidden{
   display: none;
 }
 
