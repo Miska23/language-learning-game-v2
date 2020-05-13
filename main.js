@@ -2,11 +2,11 @@ import * as DOMElements from './Modules/DomElements.js'
 
 let openedCards = [];
 let pairCounter = 0;
-let gameCounter = 0;
+let firstGame = true;
 let timer;
 let colourName;
 let selectedLanguage;
-let selectedMode;
+let easyMode;
 let newGameOption;
 let fronts;
 let backs;
@@ -91,101 +91,6 @@ const initialCards = [
   } 
 ]
 
-const displaySelectedLanguage = (language) => {
-  DOMElements.langSelectionDisp.style.display = 'block';
-  if (language === 'english') {
-    return 'Englanti';
-  } else if (language === 'french') {
-    return 'Ranska';
-  } else if (language === 'russian') {
-    return 'Venäjä';
-  }
-}
-
-const selectLanguage = event => {
-  selectedLanguage = event.target.dataset.lang
-  DOMElements.langButtons.forEach(langButton => langButton.style.display = 'none')
-  DOMElements.langSelectionDisp.innerHTML = `Valittu kieli: ${displaySelectedLanguage(selectedLanguage)}`;
-  DOMElements.modeButtons.forEach(modeButton => modeButton.style.display = 'inline-block')
-}
-
-const displaySelectedMode = (mode) => {
-  DOMElements.modeSelectionDisp.style.display = 'block';
-  if (mode === 'easy') {
-    return 'Helppo';
-  } else if (mode === 'difficult') {
-    return 'Vaikea';
-  }
-}
-
-const selectMode = event => {  
-  selectedMode = event.target.dataset.mode;
-  DOMElements.modeButtons.forEach(langButton => langButton.style.display = 'none')
-  DOMElements.modeSelectionDisp.innerHTML = `Valittu taso: ${displaySelectedMode(selectedMode)}`;
-  if (!gameCounter) {
-  startGameWithCountdown();
-  }
-}
-
-const shuffle = array => {
-  let currentIndex = array.length,
-    temporaryValue,
-    randomIndex;
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-      // And swap it with the current element.
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-  return array;
-}
-
-const shuffleInitialCards = mode => {
-  if (mode === 'easy') {
-    return shuffle(initialCards.slice(0,4)); //! TESTAUSARVOT
-  } else if (mode === 'difficult') {
-    return shuffle(initialCards.slice(0,8)); //! TESTAUSARVOT
-  }
-}
-
-const createCards = () => {
-  shuffledInitialCards = shuffleInitialCards(selectedMode);
-  selectedMode === 'easy' ? fronts = DOMElements.frontsEasy : fronts = DOMElements.frontsDifficult;
-  fronts.forEach((front, index) => {
-    front.setAttribute('pairID', shuffledInitialCards[index].pairID);
-    if (shuffledInitialCards[index].colour) {
-      front.classList.add(`${shuffledInitialCards[index].colour}-card`);
-    } else {
-      front.classList.add('text-card');
-      if (selectedLanguage === 'english') {
-        colourName = shuffledInitialCards[index].english;
-      } else if (selectedLanguage === 'french'){ 
-        colourName = shuffledInitialCards[index].french;
-      } else if (selectedLanguage === 'russian'){ 
-        colourName = shuffledInitialCards[index].russian;
-      }
-      front.innerHTML = `${colourName}`;
-    }
-  });
-};
-
-const toggleSelectedGrid = mode => {
-  if (mode === 'easy') {
-    DOMElements.easyGrid.classList.remove('hidden');
-    DOMElements.difficultGrid.classList.add('hidden');
-  } else if (mode === 'difficult'){
-    DOMElements.difficultGrid.classList.remove('hidden');
-    DOMElements.easyGrid.classList.add('hidden');  }
-};
-
-const showCard = function() {
-  this.children[0].classList.toggle("show");
-}
-
 const addToOpenedCards = function() {
   if (this.children[0].classList.contains("show")) {
     openedCards.push(this.children[0]);
@@ -219,19 +124,13 @@ const enableClickingInTwoSeconds = () => {
 }
 
 const toggleNewGameElements = () => {
-  if (DOMElements.newGameInfo.style.display === 'block') {
-    DOMElements.newGameButtons.style.display = 'none';
-    DOMElements.newGameInfo.style.display = 'none';
-  } else {
-    DOMElements.newGameButtons.style.display = 'block';
-    DOMElements.newGameInfo.style.display = 'block';
-  }
+  DOMElements.newGameInfo.classList.toggle("hidden") 
 }
 
 const isGameCompleted = () => {
   let halfOfAllCards = backs.length / 2;
   if (pairCounter === halfOfAllCards) {
-    gameCounter++;
+    firstGame = false;
     toggleNewGameElements();
   }
 }
@@ -253,6 +152,10 @@ const checkIfOpenedCardsMatch = () => {
   }
 } 
 
+const showCard = function() {
+  this.children[0].classList.toggle("show");
+}
+
 const setupCardListeners = () => {
   backs.forEach(back => {
     back.addEventListener("click", showCard);
@@ -261,11 +164,127 @@ const setupCardListeners = () => {
   })
 }
 
+const selectLanguage = event => {
+  selectedLanguage = event.target.dataset.lang
+  let langText;
+  if (selectedLanguage === 'english') {
+    langText = 'englanti';
+  } else if (selectedLanguage === 'french') {
+    langText = 'ranska';
+  } else if (selectedLanguage === 'russian') {
+    langText = 'venäjä';
+  }
+  DOMElements.langButtons.forEach(langButton => langButton.style.display = 'none')
+  DOMElements.langSelectionDisp.style.display = 'block';
+  DOMElements.langSelectionDisp.innerHTML = `Valittu kieli: ${langText}`;
+  DOMElements.modeButtons.forEach(modeButton => modeButton.style.display = 'inline-block')
+}
+
+const displaySelectedMode = () => {
+  if (easyMode) {
+    return 'helppo'
+  } else {
+    return 'vaikea'
+  }
+}
+
+const selectMode = event => {
+  if (event.target.dataset.mode === 'easy') {
+    easyMode = true;
+  } else {
+    easyMode = false;
+  }
+  DOMElements.modeButtons.forEach(langButton => langButton.style.display = 'none')
+  DOMElements.modeSelectionDisp.style.display = 'block';
+  DOMElements.modeSelectionDisp.innerHTML = `Valittu taso: ${displaySelectedMode()}`;
+  DOMElements.startInfo.style.display = 'none';
+  startGameWithCountdown();
+}
+
+const shuffle = array => {
+  let currentIndex = array.length,
+    temporaryValue,
+    randomIndex;
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+  return array;
+}
+
+const shuffleInitialCards = () => {
+  if (easyMode) {
+    return shuffle(initialCards.slice(0,4)); //! TESTAUSARVOT
+  } else {
+    return shuffle(initialCards.slice(0,8)); //! TESTAUSARVOT
+  }
+}
+
+const selectFrontsAndBacks = () => {
+  if (easyMode) {
+    fronts = DOMElements.frontsEasy;
+    backs = DOMElements.backsEasy;
+  } else {
+    fronts = DOMElements.frontsDifficult
+    backs = DOMElements.backsDifficult
+  }
+}
+
+const clearClasslists = () => {
+  fronts.forEach(front => front.classList.remove(front.classList.item(1)))
+}
+
+//TODO: erota tai siirrä sisältöä, koska osa ei liity kortteihin
+const createCards = () => {
+  shuffledInitialCards = shuffleInitialCards();
+  selectFrontsAndBacks();
+  if (!firstGame) { //! suorita jos ei ole ensimmäinen peli eli on jo asetettu classListejä
+    clearClasslists();
+    pairCounter = 0;
+    fronts.forEach(front => front.classList.remove('show'));
+    backs.forEach(back => back.style.pointerEvents = 'auto');
+  }
+  fronts.forEach((front, index) => {
+    front.setAttribute('pairID', shuffledInitialCards[index].pairID);
+    //! ed. pelissä asetettu teksti pois kortista, joka on nyt värikortti
+    if (!firstGame) front.innerHTML = ''; 
+    if (shuffledInitialCards[index].colour) {
+      front.classList.add(`${shuffledInitialCards[index].colour}-card`);
+    } else {
+      front.classList.add('text-card');
+      //! turha block A ja B -reseteissä
+      if (selectedLanguage === 'english') {
+        colourName = shuffledInitialCards[index].english;
+      } else if (selectedLanguage === 'french'){ 
+        colourName = shuffledInitialCards[index].french;
+      } else if (selectedLanguage === 'russian'){ 
+        colourName = shuffledInitialCards[index].russian;
+      }
+      front.innerHTML = `${colourName}`;
+    }
+  });
+};
+
+//TODO: tee toiminnot classlist.togglella?
+const toggleSelectedGrid = () => {
+  if (easyMode) {
+    DOMElements.easyGrid.classList.remove('hidden');
+    DOMElements.difficultGrid.classList.add('hidden');
+  } else {
+    DOMElements.difficultGrid.classList.remove('hidden');
+    DOMElements.easyGrid.classList.add('hidden');  }
+};
+
 const setupGame = () => {
   createCards();
-  selectedMode === 'easy' ? backs = DOMElements.backsEasy : backs = DOMElements.backsDifficult;
   setupCardListeners();
-  toggleSelectedGrid(selectedMode);
+  toggleSelectedGrid();
 } 
 
 const startGameWithCountdown = () => {
@@ -284,122 +303,25 @@ const startGameWithCountdown = () => {
   }, 1000)
 }
 
-const clearClassLists = (firstArray, secondArray) => {
-    firstArray.forEach(element => element.classList.remove(element.classList.item(1)))
-  if (secondArray) {
-    secondArray.forEach(element => element.classList.remove(element.classList.item(1)))
-  }
-}
-
-//TODO: poista kun uusi reset-toiminto on valmis
-const playAgain = () => {
-  shuffledInitialCards = shuffleInitialCards(selectedMode); //! uusi sekoitus
-  clearClassLists(fronts); //! väri- ja tekstiluokan poisto
-  fronts.forEach((front, index) => {
-    front.setAttribute('pairID', shuffledInitialCards[index].pairID);
-    front.innerHTML = ''; //! ed. pelissä asetettu teksti pois kortista, joka on nyt värikortti
-    if (shuffledInitialCards[index].colour) {
-      front.classList.add(`${shuffledInitialCards[index].colour}-card`);
-    }
-    else {
-      front.classList.add('text-card');
-      colourName = shuffledInitialCards[index][selectedLanguage]; //! teksti ed. pelin kielival. mukaan
-      front.innerHTML = `${colourName}`;
-    }
-  });
-}
-//TODO: poista kun uusi reset-toiminto on valmis
-const playAgainAndChangeMode = () => {
-  selectedMode === 'easy' ? selectedMode = 'difficult' : selectedMode = 'easy' //! tason muutos 
-  shuffledInitialCards = shuffleInitialCards(selectedMode); //! uusi sekoitus
-  //! frontsien käyttäminen tason mukaan
-  selectedMode === 'easy' ? fronts = DOMElements.frontsEasy : fronts = DOMElements.frontsDifficult;
-  clearClassLists(fronts); //! väri- ja tekstiluokan poisto
-  fronts.forEach((front, index) => {
-    front.setAttribute('pairID', shuffledInitialCards[index].pairID);
-    front.innerHTML = ''; //! ed. pelissä asetettu teksti pois kortista, joka on nyt värikortti
-    if (shuffledInitialCards[index].colour) {
-      front.classList.add(`${shuffledInitialCards[index].colour}-card`);
-    } else {
-      front.classList.add('text-card');
-      colourName = shuffledInitialCards[index][selectedLanguage]; //! teksti ed. pelin kielival. mukaan
-      front.innerHTML = `${colourName}`;
-    }
-  });
-  //! backsien uud. asetus jotta niiden toiminnot ovat ok tason vaihdon jälkeen
-  selectedMode === 'easy' ? backs = DOMElements.backsEasy : backs = DOMElements.backsDifficult; 
-  setupCardListeners();
-/*   toggleSelectedGrid(selectedMode); */
-}
-//TODO: poista kun uusi reset-toiminto on valmis
-const playAgainAndChangeLanguage = () => {
-  DOMElements.newGameInfo.style.display = 'none';
-  DOMElements.easyGrid.classList.add('hidden');
-  DOMElements.difficultGrid.classList.add('hidden');
-  console.log('from playAgainAndChangeLanguage (1), sel.lang and sel.mode are:', selectedLanguage, selectedMode);
-  shuffledInitialCards = shuffleInitialCards(selectedMode);
-  selectedMode === 'easy' ? fronts = DOMElements.frontsEasy : fronts = DOMElements.frontsDifficult;
-  clearClassLists(fronts);
-  console.log('from playAgainAndChangeLanguage (2), fronts is now:', fronts);
-}
-//TODO: poista kun uusi reset-toiminto on valmis
-const resetGame = event => {
-  //! toiminnot kaikissa kolmessa
-  newGameOption = event.target.dataset.newgameoption;
-  pairCounter = 0;
-  fronts.forEach(front => front.classList.toggle("show"));
-  if (newGameOption === 'playAgain') { 
-    playAgain();
-  } else if (newGameOption === 'changeMode') {
-    playAgainAndChangeMode();
-  } else if (newGameOption === 'changeLanguage') {
-    playAgainAndChangeLanguage();
-  }
-  backs.forEach(back => back.style.pointerEvents = "auto"); //! tämä kaikissa kolmessa 
-}        
-
-const resetGameWithOptions = (language, mode) => {
-  pairCounter = 0;
+const resetGameWithOptions = event => {
   toggleNewGameElements();
-  //! VAIHTOEHTO A:
-  mode === 'easy' ? fronts = DOMElements.frontsEasy : fronts = DOMElements.frontsDifficult;
-  mode === 'easy' ? backs = DOMElements.backsEasy : backs = DOMElements.backsDifficult;
-  fronts.forEach(front => front.classList.remove('show'));
-  shuffledInitialCards = shuffleInitialCards(mode); //! uusi sekoitus
-  clearClassLists(fronts); //! väri- ja tekstiluokan poisto
-  fronts.forEach((front, index) => {
-    front.setAttribute('pairID', shuffledInitialCards[index].pairID);
-    front.innerHTML = ''; //! ed. pelissä asetettu teksti pois kortista, joka on nyt värikortti
-    if (shuffledInitialCards[index].colour) {
-      front.classList.add(`${shuffledInitialCards[index].colour}-card`);
-    }
-    else {
-      front.classList.add('text-card');
-      colourName = shuffledInitialCards[index][language]; //! teksti ed. pelin kielival. mukaan
-      front.innerHTML = `${colourName}`;
-    }
-  });
-  toggleSelectedGrid(selectedMode);
-  backs.forEach(back => back.style.pointerEvents = 'auto');
-  setupCardListeners();
-}
-
-const setResetOption = event => {
   newGameOption = event.target.dataset.newgameoption;
-  let language;
-  let mode;
   if (newGameOption === 'playAgain') { 
+    startGameWithCountdown()
   } else if (newGameOption === 'changeMode') {
-    selectedMode === 'easy' ? selectedMode = 'difficult' : selectedMode = 'easy'
+    easyMode = !easyMode;
+    DOMElements.modeSelectionDisp.style.display = 'block';
+    DOMElements.modeSelectionDisp.innerHTML = `Valittu taso: ${displaySelectedMode()}`;
+    startGameWithCountdown();
   } else if (newGameOption === 'changeLanguage') {
-    
+    DOMElements.langSelectionDisp.style.display = 'none';
+    DOMElements.modeSelectionDisp.style.display = 'none';
+    DOMElements.langButtons.forEach(langButton => langButton.style.display = 'inline-block')
   }
-  resetGameWithOptions(selectedLanguage, selectedMode);
 }
-
 
 const setupButtons = (function() {
   DOMElements.langButtons.forEach(langButton => langButton.addEventListener('click', selectLanguage))
   DOMElements.modeButtons.forEach(modeButton => modeButton.addEventListener('click', selectMode))
-  DOMElements.newGameButtons.addEventListener('click', setResetOption);
+  DOMElements.newGameButtons.addEventListener('click', resetGameWithOptions);
 })(); 

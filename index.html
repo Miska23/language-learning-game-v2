@@ -11,8 +11,10 @@
 
   <body>
     <header>
-      <p>Tervetuloa opettelemaan vieraita kieliä muistikorttipelin avulla!</p>
-      <p>Valitse ensin kieli ja sitten vaikeustaso. Tämän jälkeen peli alkaa.</p>
+      <section id='start-info'>
+        <p>Tervetuloa opettelemaan vieraita kieliä muistikorttipelin avulla!</p>
+        <p>Valitse ensin kieli ja sitten vaikeustaso. Tämän jälkeen peli alkaa.</p>
+      </section>
         <button class="language-button" data-lang='english' type="button">Englanti</button>
         <button class="language-button" data-lang='french' type="button">Ranska</button>
         <button class="language-button" data-lang='russian' type="button">Venäjä</button>
@@ -22,14 +24,14 @@
           <button class="mode-button" data-mode='difficult' type="button">Vaikea</button>
         </div>
       <div id='mode-selection-display'></div>
-      <div id='new-game-info'>
+      <section id='new-game-info'class="hidden">
         <p>Löysit kaikki parit!</p>
         <div id='new-game-buttons'>
           <button data-newGameOption='playAgain' type="button">Pelaa uudelleen</button>
           <button data-newGameOption='changeMode' type="button">Vaihda tasoa</button>
           <button data-newGameOption='changeLanguage'type="button">Vaihda kieltä</button>
         </div>
-      </div>  
+      </section>  
       <div id='countdown-timer'>
       </div>
     </header>

@@ -1,3 +1,5 @@
+export const startInfo = document.getElementById('start-info');
+
 export const langButtons = document.querySelectorAll(".language-button");
 
 export const langSelectionDisp = document.getElementById('language-selection-display');
