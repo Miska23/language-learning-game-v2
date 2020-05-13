@@ -1,16 +1,12 @@
-export const langButtonsAndText = document.getElementById("language-buttons-and-text"); //*'Valitse kieli' + napit
-
 export const langButtons = document.querySelectorAll(".language-button");
 
 export const langSelectionDisp = document.getElementById('language-selection-display');
 
-export const modeButtonsAndText = document.getElementById('mode-buttons-and-text');
-
-export const modeButtons = document.getElementById('mode-buttons');
+export const modeButtons = document.querySelectorAll(".mode-button");
 
 export const modeSelectionDisp = document.getElementById('mode-selection-display');
 
-export const startButton = document.getElementById("start-and-reset-button");
+export const countDownTimer = document.getElementById('countdown-timer');
 
 export const newGameInfo = document.getElementById('new-game-info');
 

@@ -5,15 +5,22 @@ body {
 header {
   font-size: 1.3rem;
   border: 1px solid;
-  height: 20vh;
+  height: 33vh;
   text-align: center;
+}
+header p{
+  margin: 0;
+}
+
+header button {
+  margin: 3,33%;
 }
 
 #language-selection-display {
   display: none;
 }
 
-#mode-buttons-and-text {
+.mode-button {
   display: none;
 }
 
@@ -21,13 +28,19 @@ header {
   display: none;
 }
 
-#start-and-reset-button {
-  display: none;
-}
-
 #new-game-info {
   display: none;
 }
+
+#new-game-info p {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+#countdown-timer {
+  display: none;
+  font-size: 2.5rem;
+} 
 
 .card-container {
   display: grid;
