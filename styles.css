@@ -28,9 +28,13 @@ header button {
   display: none;
 }
 
-#new-game-info p {
+#completion-message {
   font-size: 1.5rem;
   font-weight: bold;
+}
+
+#completion-message {
+  display: none;
 }
 
 #countdown-timer {

@@ -10,9 +10,9 @@ export const modeSelectionDisp = document.getElementById('mode-selection-display
 
 export const countDownTimer = document.getElementById('countdown-timer');
 
-export const newGameInfo = document.getElementById('new-game-info');
-
 export const newGameButtons = document.getElementById('new-game-buttons');
+
+export const completionMsg = document.getElementById('completion-message');
 
 export const backsEasy = Array.from(document.getElementById('easy-mode-container').querySelectorAll(".card-backside"));
 

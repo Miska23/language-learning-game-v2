@@ -1,16 +1,25 @@
+//TODO: käyttäjällе näkyvä parilaskuri
+//TODO: käyttäjällе näkyvä kello sekä läpäisyn kohdalla viesti joka kertoo käytetyn ajan
+//TODO: ranskan- ja venäjänkielisten sanojen taivutusmuotojen näyttäminen läpäisyn jälkeen
+//TODO: ohjemodaali
+//TODO: perustyylit kuntoon
+//TODO: responsiivinen design
+//TODO: mobiiliversio React nativella?
+
+
+
 import * as DOMElements from './Modules/DomElements.js'
 
 let openedCards = [];
 let pairCounter = 0;
 let firstGame = true;
-let timer;
 let colourName;
 let selectedLanguage;
 let easyMode;
 let newGameOption;
 let fronts;
 let backs;
-let shuffledInitialCards;
+let shuffledCards;
 
 const initialCards = [
   {colour: 'red',
@@ -92,7 +101,7 @@ const initialCards = [
 ]
 
 const addToOpenedCards = function() {
-  if (this.children[0].classList.contains("show")) {
+  if (this.children[0].classList.contains('show')) {
     openedCards.push(this.children[0]);
     openedCards.forEach(openedCard => openedCard.parentNode.style.pointerEvents = 'none');
   } else {
@@ -101,7 +110,7 @@ const addToOpenedCards = function() {
 }
 
 const closeOpenedCards = () => {
-  openedCards.forEach(openedCard => openedCard.classList.remove("show"));
+  openedCards.forEach(openedCard => openedCard.classList.remove('show'));
   openedCards = [];
 }
 
@@ -110,28 +119,25 @@ const closeOpenedCards = () => {
 //* Estää tilanteen jossa tason vaihto sulkee uudessa pelissä nopesti avatun parentDivin (eli kortin), 
 //* joka oli ennen tason vaihtoa vielä auki vanhassa pelissä tasonapin painamisen aikana (ei paria muodostunut) 
 const closeCardsInTwoSeconds = () => {
-  timer = setTimeout(() => closeOpenedCards(), 2000);
+  setTimeout(() => closeOpenedCards(), 2000);
 }
 
 const enableClickingInTwoSeconds = () => {
   setTimeout(() => {
     backs.forEach(back=> {
-      if (!back.children[0].classList.contains("show")) {
-        back.style.pointerEvents = "auto";
+      if (!back.children[0].classList.contains('show')) {
+        back.style.pointerEvents = 'auto';
       }
     });
   }, 2000)
-}
-
-const toggleNewGameElements = () => {
-  DOMElements.newGameInfo.classList.toggle("hidden") 
 }
 
 const isGameCompleted = () => {
   let halfOfAllCards = backs.length / 2;
   if (pairCounter === halfOfAllCards) {
     firstGame = false;
-    toggleNewGameElements();
+    pairCounter = 0;
+    DOMElements.completionMsg.style.display = 'block'  
   }
 }
  
@@ -146,14 +152,14 @@ const checkIfOpenedCardsMatch = () => {
     pairCounter++;
     isGameCompleted(); 
   } else if (openedCardsCounter === 2){
-    backs.forEach(back => back.style.pointerEvents = "none");
+    backs.forEach(back => back.style.pointerEvents = 'none');
     closeCardsInTwoSeconds();
     enableClickingInTwoSeconds();
   }
 } 
 
 const showCard = function() {
-  this.children[0].classList.toggle("show");
+  this.children[0].classList.toggle('show');
 }
 
 const setupCardListeners = () => {
@@ -236,42 +242,39 @@ const selectFrontsAndBacks = () => {
   }
 }
 
-const clearClasslists = () => {
+const clearCardClasses = () => {
   fronts.forEach(front => front.classList.remove(front.classList.item(1)))
 }
 
-//TODO: erota tai siirrä sisältöä, koska osa ei liity kortteihin
-const createCards = () => {
-  shuffledInitialCards = shuffleInitialCards();
+const setupCards = () => {
+  shuffledCards = shuffleInitialCards();
   selectFrontsAndBacks();
   if (!firstGame) { //! suorita jos ei ole ensimmäinen peli eli on jo asetettu classListejä
-    clearClasslists();
-    pairCounter = 0;
+    clearCardClasses();
     fronts.forEach(front => front.classList.remove('show'));
     backs.forEach(back => back.style.pointerEvents = 'auto');
   }
   fronts.forEach((front, index) => {
-    front.setAttribute('pairID', shuffledInitialCards[index].pairID);
+    front.setAttribute('pairID', shuffledCards[index].pairID);
     //! ed. pelissä asetettu teksti pois kortista, joka on nyt värikortti
     if (!firstGame) front.innerHTML = ''; 
-    if (shuffledInitialCards[index].colour) {
-      front.classList.add(`${shuffledInitialCards[index].colour}-card`);
+    if (shuffledCards[index].colour) {
+      front.classList.add(`${shuffledCards[index].colour}-card`);
     } else {
       front.classList.add('text-card');
       //! turha block A ja B -reseteissä
       if (selectedLanguage === 'english') {
-        colourName = shuffledInitialCards[index].english;
+        colourName = shuffledCards[index].english;
       } else if (selectedLanguage === 'french'){ 
-        colourName = shuffledInitialCards[index].french;
+        colourName = shuffledCards[index].french;
       } else if (selectedLanguage === 'russian'){ 
-        colourName = shuffledInitialCards[index].russian;
+        colourName = shuffledCards[index].russian;
       }
       front.innerHTML = `${colourName}`;
     }
   });
 };
 
-//TODO: tee toiminnot classlist.togglella?
 const toggleSelectedGrid = () => {
   if (easyMode) {
     DOMElements.easyGrid.classList.remove('hidden');
@@ -282,9 +285,11 @@ const toggleSelectedGrid = () => {
 };
 
 const setupGame = () => {
-  createCards();
+  setupCards();
   setupCardListeners();
   toggleSelectedGrid();
+  DOMElements.newGameButtons.classList.toggle("hidden") 
+  console.log('setupGame, openedCards is: ', openedCards);
 } 
 
 const startGameWithCountdown = () => {
@@ -304,7 +309,16 @@ const startGameWithCountdown = () => {
 }
 
 const resetGameWithOptions = event => {
-  toggleNewGameElements();
+  console.log('openedCards is: ', openedCards);
+  openedCards = [];
+  pairCounter = 0;
+  if (DOMElements.completionMsg.style.display = 'block') {
+    DOMElements.completionMsg.style.display = 'none'
+  }
+  DOMElements.newGameButtons.classList.toggle("hidden");
+  DOMElements.easyGrid.classList.add('hidden');
+  DOMElements.difficultGrid.classList.add('hidden');
+  firstGame = false;
   newGameOption = event.target.dataset.newgameoption;
   if (newGameOption === 'playAgain') { 
     startGameWithCountdown()
@@ -325,3 +339,4 @@ const setupButtons = (function() {
   DOMElements.modeButtons.forEach(modeButton => modeButton.addEventListener('click', selectMode))
   DOMElements.newGameButtons.addEventListener('click', resetGameWithOptions);
 })(); 
+
