@@ -42,6 +42,10 @@ header button {
   font-size: 2.5rem;
 } 
 
+#game-timer {
+  font-size: 2.25rem;
+} 
+
 .card-container {
   display: grid;
 	grid-template-columns: repeat(5, 1fr);

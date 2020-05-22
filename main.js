@@ -6,20 +6,18 @@
 //TODO: responsiivinen design
 //TODO: mobiiliversio React nativella?
 
-
-
 import * as DOMElements from './Modules/DomElements.js'
 
 let openedCards = [];
 let pairCounter = 0;
 let firstGame = true;
-let colourName;
 let selectedLanguage;
 let easyMode;
 let newGameOption;
 let fronts;
 let backs;
 let shuffledCards;
+let gameTimer;
 
 const initialCards = [
   {colour: 'red',
@@ -104,6 +102,8 @@ const addToOpenedCards = function() {
   if (this.children[0].classList.contains('show')) {
     openedCards.push(this.children[0]);
     openedCards.forEach(openedCard => openedCard.parentNode.style.pointerEvents = 'none');
+    console.log('from addToOpenedCards, openedCards is: ', openedCards);
+    
   } else {
     openedCards = [];
   }
@@ -135,26 +135,29 @@ const enableClickingInTwoSeconds = () => {
 const isGameCompleted = () => {
   let halfOfAllCards = backs.length / 2;
   if (pairCounter === halfOfAllCards) {
+    let timerEndValue = DOMElements.gameTimer.textContent;
+    console.log('from isGameCompleted, timerEndValue is: ', timerEndValue );
+    clearInterval(gameTimer);
+    DOMElements.gameTimer.textContent = `Löysit kaikki parit ajassa: ${timerEndValue}`;
     firstGame = false;
     pairCounter = 0;
     DOMElements.completionMsg.style.display = 'block'  
   }
 }
- 
-const pairCheck = () => {
-  return openedCards[0].getAttribute('pairID') === openedCards[1].getAttribute('pairID')
-} 
 
 const checkIfOpenedCardsMatch = () => {
-  let openedCardsCounter = openedCards.length;
-  if (openedCardsCounter === 2 && pairCheck()) {
-    openedCards = [];
-    pairCounter++;
-    isGameCompleted(); 
-  } else if (openedCardsCounter === 2){
-    backs.forEach(back => back.style.pointerEvents = 'none');
-    closeCardsInTwoSeconds();
-    enableClickingInTwoSeconds();
+  const openedCardsCounter = openedCards.length;
+  if (openedCardsCounter === 2) {
+    const isPair = openedCards[0].getAttribute('pairID') === openedCards[1].getAttribute('pairID');
+    if (isPair) {
+      openedCards = [];  
+      pairCounter++;
+      isGameCompleted(); 
+    } else {
+      backs.forEach(back => back.style.pointerEvents = 'none');
+      closeCardsInTwoSeconds();
+      enableClickingInTwoSeconds();
+    }
   }
 } 
 
@@ -175,9 +178,11 @@ const selectLanguage = event => {
   let langText;
   if (selectedLanguage === 'english') {
     langText = 'englanti';
-  } else if (selectedLanguage === 'french') {
+  } 
+  if (selectedLanguage === 'french') {
     langText = 'ranska';
-  } else if (selectedLanguage === 'russian') {
+  } 
+  if (selectedLanguage === 'russian') {
     langText = 'venäjä';
   }
   DOMElements.langButtons.forEach(langButton => langButton.style.display = 'none')
@@ -242,7 +247,7 @@ const selectFrontsAndBacks = () => {
   }
 }
 
-const clearCardClasses = () => {
+const clearTextAndColourClasses = () => {
   fronts.forEach(front => front.classList.remove(front.classList.item(1)))
 }
 
@@ -250,7 +255,7 @@ const setupCards = () => {
   shuffledCards = shuffleInitialCards();
   selectFrontsAndBacks();
   if (!firstGame) { //! suorita jos ei ole ensimmäinen peli eli on jo asetettu classListejä
-    clearCardClasses();
+    clearTextAndColourClasses();
     fronts.forEach(front => front.classList.remove('show'));
     backs.forEach(back => back.style.pointerEvents = 'auto');
   }
@@ -262,12 +267,15 @@ const setupCards = () => {
       front.classList.add(`${shuffledCards[index].colour}-card`);
     } else {
       front.classList.add('text-card');
+      let colourName;
       //! turha block A ja B -reseteissä
       if (selectedLanguage === 'english') {
         colourName = shuffledCards[index].english;
-      } else if (selectedLanguage === 'french'){ 
+      }
+      if (selectedLanguage === 'french'){ 
         colourName = shuffledCards[index].french;
-      } else if (selectedLanguage === 'russian'){ 
+      }
+      if (selectedLanguage === 'russian'){ 
         colourName = shuffledCards[index].russian;
       }
       front.innerHTML = `${colourName}`;
@@ -288,8 +296,8 @@ const setupGame = () => {
   setupCards();
   setupCardListeners();
   toggleSelectedGrid();
+  startGameTimer();
   DOMElements.newGameButtons.classList.toggle("hidden") 
-  console.log('setupGame, openedCards is: ', openedCards);
 } 
 
 const startGameWithCountdown = () => {
@@ -309,7 +317,6 @@ const startGameWithCountdown = () => {
 }
 
 const resetGameWithOptions = event => {
-  console.log('openedCards is: ', openedCards);
   openedCards = [];
   pairCounter = 0;
   if (DOMElements.completionMsg.style.display = 'block') {
@@ -322,16 +329,50 @@ const resetGameWithOptions = event => {
   newGameOption = event.target.dataset.newgameoption;
   if (newGameOption === 'playAgain') { 
     startGameWithCountdown()
-  } else if (newGameOption === 'changeMode') {
+  }
+  if (newGameOption === 'changeMode') {
     easyMode = !easyMode;
     DOMElements.modeSelectionDisp.style.display = 'block';
     DOMElements.modeSelectionDisp.innerHTML = `Valittu taso: ${displaySelectedMode()}`;
     startGameWithCountdown();
-  } else if (newGameOption === 'changeLanguage') {
+  } 
+  if (newGameOption === 'changeLanguage') {
     DOMElements.langSelectionDisp.style.display = 'none';
     DOMElements.modeSelectionDisp.style.display = 'none';
     DOMElements.langButtons.forEach(langButton => langButton.style.display = 'inline-block')
   }
+}
+
+const startGameTimer = () => {
+
+  //! alussa muoto 00.00, sitten 00.01, 00.10, 01.00,
+  const createTimeFormat = (seconds, minutes) => {
+    console.log('seconds: ', seconds, 'minutes: ', minutes);
+    
+    if (minutes < 10) {
+      minutes = "0" + minutes;
+    }  
+    if (seconds < 10) {
+      seconds = "0" + seconds;
+    }
+    let result = minutes + ':' + seconds;
+    return minutes + ':' + seconds
+  }
+/*   const addZero = (time) => {
+    if (time < 10) {
+      time = "0" + time;
+    }
+    return time; */
+  
+  DOMElements.gameTimer.classList.toggle('hidden');
+  let seconds = 1;
+  let minutes = 0;
+  DOMElements.gameTimer.textContent = `00:00`
+  gameTimer = setInterval(() => {    
+/*     DOMElements.gameTimer.textContent = `${addZero(time)}`
+ */    DOMElements.gameTimer.textContent = `${createTimeFormat(seconds, minutes)}`
+    seconds++;
+  }, 1000)
 }
 
 const setupButtons = (function() {
