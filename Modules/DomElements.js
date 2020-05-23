@@ -10,7 +10,7 @@ export const modeSelectionDisp = document.getElementById('mode-selection-display
 
 export const countDownTimer = document.getElementById('countdown-timer');
 
-export const gameTimer = document.getElementById('game-timer');
+export const gameTimerDisp = document.getElementById('game-timer-display');
 
 export const newGameButtons = document.getElementById('new-game-buttons');
 

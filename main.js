@@ -135,13 +135,13 @@ const enableClickingInTwoSeconds = () => {
 const isGameCompleted = () => {
   let halfOfAllCards = backs.length / 2;
   if (pairCounter === halfOfAllCards) {
-    let timerEndValue = DOMElements.gameTimer.textContent;
-    console.log('from isGameCompleted, timerEndValue is: ', timerEndValue );
+    let timerEndValue = DOMElements.gameTimerDisp.textContent;
     clearInterval(gameTimer);
-    DOMElements.gameTimer.textContent = `Löysit kaikki parit ajassa: ${timerEndValue}`;
+    DOMElements.gameTimerDisp.classList.toggle('hidden');
+    DOMElements.completionMsg.textContent = `Löysit kaikki parit ajassa: ${timerEndValue}`;
+    DOMElements.completionMsg.style.display = 'block'  
     firstGame = false;
     pairCounter = 0;
-    DOMElements.completionMsg.style.display = 'block'  
   }
 }
 
@@ -345,35 +345,33 @@ const resetGameWithOptions = event => {
 
 const startGameTimer = () => {
 
-  //! alussa muoto 00.00, sitten 00.01, 00.10, 01.00,
+  DOMElements.gameTimerDisp.classList.toggle('hidden');
   const createTimeFormat = (seconds, minutes) => {
-    console.log('seconds: ', seconds, 'minutes: ', minutes);
-    
     if (minutes < 10) {
       minutes = "0" + minutes;
-    }  
+    }
     if (seconds < 10) {
       seconds = "0" + seconds;
     }
     let result = minutes + ':' + seconds;
-    return minutes + ':' + seconds
+    return result;
   }
-/*   const addZero = (time) => {
-    if (time < 10) {
-      time = "0" + time;
-    }
-    return time; */
   
-  DOMElements.gameTimer.classList.toggle('hidden');
   let seconds = 1;
   let minutes = 0;
-  DOMElements.gameTimer.textContent = `00:00`
-  gameTimer = setInterval(() => {    
-/*     DOMElements.gameTimer.textContent = `${addZero(time)}`
- */    DOMElements.gameTimer.textContent = `${createTimeFormat(seconds, minutes)}`
+  
+  DOMElements.gameTimerDisp.textContent = '00:00'
+
+  gameTimer = setInterval(() => {
+    DOMElements.gameTimerDisp.textContent = `${createTimeFormat(seconds, minutes)}`
+    if (seconds === 59) {
+      minutes++;
+      seconds = seconds - 60;
+    }
     seconds++;
   }, 1000)
 }
+
 
 const setupButtons = (function() {
   DOMElements.langButtons.forEach(langButton => langButton.addEventListener('click', selectLanguage))
