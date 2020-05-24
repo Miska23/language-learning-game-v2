@@ -43,6 +43,12 @@ header button {
 } 
 
 #game-timer-display {
+  float: left;
+  font-size: 2.25rem;
+} 
+
+#move-counter-display {
+  float: right;
   font-size: 2.25rem;
 } 
 

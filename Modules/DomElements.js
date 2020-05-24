@@ -12,6 +12,10 @@ export const countDownTimer = document.getElementById('countdown-timer');
 
 export const gameTimerDisp = document.getElementById('game-timer-display');
 
+export const moveCounterDisp = document.getElementById('move-counter-display');
+
+export const moveCounter = document.getElementById('move-counter');
+
 export const newGameButtons = document.getElementById('new-game-buttons');
 
 export const completionMsg = document.getElementById('completion-message');

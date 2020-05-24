@@ -1,5 +1,3 @@
-//TODO: käyttäjällе näkyvä parilaskuri
-//TODO: käyttäjällе näkyvä kello sekä läpäisyn kohdalla viesti joka kertoo käytetyn ajan
 //TODO: ranskan- ja venäjänkielisten sanojen taivutusmuotojen näyttäminen läpäisyn jälkeen
 //TODO: ohjemodaali
 //TODO: perustyylit kuntoon
@@ -8,16 +6,17 @@
 
 import * as DOMElements from './Modules/DomElements.js'
 
-let openedCards = [];
-let pairCounter = 0;
-let firstGame = true;
-let selectedLanguage;
-let easyMode;
-let newGameOption;
-let fronts;
-let backs;
-let shuffledCards;
-let gameTimer;
+let openedCards = [],
+    pairCounter = 0,
+    moveCounter = 0,
+    firstGame = true,
+    selectedLanguage,
+    easyMode,
+    newGameOption,
+    fronts,
+    backs,
+    shuffledCards,
+    gameTimer
 
 const initialCards = [
   {colour: 'red',
@@ -102,8 +101,11 @@ const addToOpenedCards = function() {
   if (this.children[0].classList.contains('show')) {
     openedCards.push(this.children[0]);
     openedCards.forEach(openedCard => openedCard.parentNode.style.pointerEvents = 'none');
-    console.log('from addToOpenedCards, openedCards is: ', openedCards);
-    
+    const addOneToMoveCounter = (() => {
+      moveCounter++;
+      DOMElements.moveCounter.textContent = `${moveCounter}`
+    })(); 
+    console.log('from addToOpenedCards, moveCounter is: ', moveCounter);
   } else {
     openedCards = [];
   }
@@ -138,10 +140,10 @@ const isGameCompleted = () => {
     let timerEndValue = DOMElements.gameTimerDisp.textContent;
     clearInterval(gameTimer);
     DOMElements.gameTimerDisp.classList.toggle('hidden');
-    DOMElements.completionMsg.textContent = `Löysit kaikki parit ajassa: ${timerEndValue}`;
+    DOMElements.moveCounterDisp.classList.toggle("hidden") 
+    DOMElements.completionMsg.textContent = `Löysit kaikki parit ajassa ${timerEndValue} ja käytit yhteensä ${moveCounter} siirtoa`;
     DOMElements.completionMsg.style.display = 'block'  
     firstGame = false;
-    pairCounter = 0;
   }
 }
 
@@ -297,6 +299,7 @@ const setupGame = () => {
   setupCardListeners();
   toggleSelectedGrid();
   startGameTimer();
+  DOMElements.moveCounterDisp.classList.toggle("hidden") 
   DOMElements.newGameButtons.classList.toggle("hidden") 
 } 
 
@@ -319,6 +322,8 @@ const startGameWithCountdown = () => {
 const resetGameWithOptions = event => {
   openedCards = [];
   pairCounter = 0;
+  moveCounter = 0;
+  DOMElements.moveCounter.textContent = '';
   if (DOMElements.completionMsg.style.display = 'block') {
     DOMElements.completionMsg.style.display = 'none'
   }
@@ -344,8 +349,9 @@ const resetGameWithOptions = event => {
 }
 
 const startGameTimer = () => {
-
   DOMElements.gameTimerDisp.classList.toggle('hidden');
+  DOMElements.gameTimerDisp.textContent = '00:00'
+
   const createTimeFormat = (seconds, minutes) => {
     if (minutes < 10) {
       minutes = "0" + minutes;
@@ -360,8 +366,6 @@ const startGameTimer = () => {
   let seconds = 1;
   let minutes = 0;
   
-  DOMElements.gameTimerDisp.textContent = '00:00'
-
   gameTimer = setInterval(() => {
     DOMElements.gameTimerDisp.textContent = `${createTimeFormat(seconds, minutes)}`
     if (seconds === 59) {
@@ -371,7 +375,6 @@ const startGameTimer = () => {
     seconds++;
   }, 1000)
 }
-
 
 const setupButtons = (function() {
   DOMElements.langButtons.forEach(langButton => langButton.addEventListener('click', selectLanguage))
