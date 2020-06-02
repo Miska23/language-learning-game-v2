@@ -1,4 +1,5 @@
-//TODO: ranskan- ja venäjänkielisten sanojen taivutusmuotojen näyttäminen läpäisyn jälkeen
+//TODO: ranskan- ja venäjänkielisten sanojen taivutusmuotojen näyttäminen läpäisyn jälkeen:
+  //TODO: pointer-eve
 //TODO: ohjemodaali
 //TODO: perustyylit kuntoon
 //TODO: responsiivinen design
@@ -101,11 +102,8 @@ const addToOpenedCards = function() {
   if (this.children[0].classList.contains('show')) {
     openedCards.push(this.children[0]);
     openedCards.forEach(openedCard => openedCard.parentNode.style.pointerEvents = 'none');
-    const addOneToMoveCounter = (() => {
-      moveCounter++;
-      DOMElements.moveCounter.textContent = `${moveCounter}`
-    })(); 
-    console.log('from addToOpenedCards, moveCounter is: ', moveCounter);
+    moveCounter++;
+    DOMElements.moveCounterDisp.textContent = `${moveCounter}`
   } else {
     openedCards = [];
   }
@@ -140,9 +138,23 @@ const isGameCompleted = () => {
     let timerEndValue = DOMElements.gameTimerDisp.textContent;
     clearInterval(gameTimer);
     DOMElements.gameTimerDisp.classList.toggle('hidden');
-    DOMElements.moveCounterDisp.classList.toggle("hidden") 
+    DOMElements.moveCounterInfo.classList.toggle("hidden")
+    DOMElements.completionMsg.classList.toggle("hidden")
     DOMElements.completionMsg.textContent = `Löysit kaikki parit ajassa ${timerEndValue} ja käytit yhteensä ${moveCounter} siirtoa`;
-    DOMElements.completionMsg.style.display = 'block'  
+    //! aktivoidaan pointerEventsit hoveria varten
+    const showDeclinations = function () {
+      this.classList.add('hoverable')
+    }
+    const hideDeclinations = function () {
+      this.classList.remove('hoverable')
+    }
+    backs.forEach(back => {
+      if (back.children[0].classList.contains('text-card')) {
+        back.style.pointerEvents = 'auto'
+        back.addEventListener('mouseover', showDeclinations)
+        back.addEventListener('mouseout', hideDeclinations)
+      }
+    }) 
     firstGame = false;
   }
 }
@@ -299,7 +311,7 @@ const setupGame = () => {
   setupCardListeners();
   toggleSelectedGrid();
   startGameTimer();
-  DOMElements.moveCounterDisp.classList.toggle("hidden") 
+  DOMElements.moveCounterInfo.classList.toggle("hidden") 
   DOMElements.newGameButtons.classList.toggle("hidden") 
 } 
 
@@ -323,10 +335,8 @@ const resetGameWithOptions = event => {
   openedCards = [];
   pairCounter = 0;
   moveCounter = 0;
-  DOMElements.moveCounter.textContent = '';
-  if (DOMElements.completionMsg.style.display = 'block') {
-    DOMElements.completionMsg.style.display = 'none'
-  }
+  DOMElements.moveCounterDisp.textContent = '0';
+  DOMElements.completionMsg.classList.toggle("hidden")
   DOMElements.newGameButtons.classList.toggle("hidden");
   DOMElements.easyGrid.classList.add('hidden');
   DOMElements.difficultGrid.classList.add('hidden');
