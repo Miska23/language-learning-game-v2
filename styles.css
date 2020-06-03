@@ -76,14 +76,22 @@ header button {
   font-size: 1.2rem;
 }
 
-/*//! toimii mutta muut gridin jäsenet eivät liiku ja alkuperäinen back näkyy takana osittain*/
-.card-container .hoverable > div {
+.hoverable:hover {
 	height: 200px;
 	width: 200px;
 	margin: 1.66%;
 	border-radius: 15%;
 	border: 1px solid;
-  font-size: 1.2rem;
+}
+
+.hoverable:hover div {
+	background-color: white;
+	height: 100%;
+	width: 100%;
+	border-radius: 15%;
+  text-align: center;
+  font-size: 1.2rem;  
+  line-height: 190px;
 }
 
 
@@ -97,7 +105,10 @@ button:hover {
   box-shadow: 1px 2px #888888;;
 }
 
+/*//TODO: tee tämä flexillä eli tee fronteista flex-containereita, jotka keskittävät sisältävän <p>:n, mutta fiksaa korttien näyttäminen koska nyt klikkaus asettaa niille displayksi blockin eikä flexiä
+/* //TODO: huomioi että p:n sisältö asetetaan vain ekan pelin yhteydessä eli resetissä muuttunut teksti menee edelleen suoraan diviin, joka nyt on p:n parent
 
+*/
 .text-card {
 	display: none;
 	background-color: white;
@@ -105,7 +116,7 @@ button:hover {
 	width: 100%;
 	border-radius: 15%;
 	text-align: center;
-  line-height: 100px;
+  line-height: 110px;
 }
 
 

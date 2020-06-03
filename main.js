@@ -142,17 +142,10 @@ const isGameCompleted = () => {
     DOMElements.completionMsg.classList.toggle("hidden")
     DOMElements.completionMsg.textContent = `Löysit kaikki parit ajassa ${timerEndValue} ja käytit yhteensä ${moveCounter} siirtoa`;
     //! aktivoidaan pointerEventsit hoveria varten
-    const showDeclinations = function () {
-      this.classList.add('hoverable')
-    }
-    const hideDeclinations = function () {
-      this.classList.remove('hoverable')
-    }
     backs.forEach(back => {
       if (back.children[0].classList.contains('text-card')) {
         back.style.pointerEvents = 'auto'
-        back.addEventListener('mouseover', showDeclinations)
-        back.addEventListener('mouseout', hideDeclinations)
+        back.classList.add('hoverable')
       }
     }) 
     firstGame = false;
@@ -292,7 +285,7 @@ const setupCards = () => {
       if (selectedLanguage === 'russian'){ 
         colourName = shuffledCards[index].russian;
       }
-      front.innerHTML = `${colourName}`;
+      front.firstElementChild.innerHTML = `${colourName}`;
     }
   });
 };
