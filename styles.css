@@ -16,6 +16,17 @@ header button {
   margin: 3,33%;
 }
 
+
+button {
+  font-size: 0.9rem;
+  border-radius: 7.5%;
+}
+
+button:hover {
+  font-size: 0.95rem;
+  box-shadow: 1px 2px #888888;;
+}
+
 #language-selection-display {
   display: none;
 }
@@ -61,12 +72,7 @@ header button {
     neljä diviä, jotka ovat "kortit" */
 }
 
-.hidden {
-  display: none;
-}
-
-.card-container > div {
-	/* määrää kaikkien korttien yhteiset ominaisuudet */
+.card-backside {
   height: 130px;
   width: 130px;
 	margin: 1.66%;
@@ -74,8 +80,19 @@ header button {
 	border: 1px solid;
   background-color: rgb(177, 154, 139);
   font-size: 1.2rem;
+  transition: height 0.5s linear, width 0.5s linear;
 }
 
+.card-frontside {
+  display: none; 
+  justify-content: center;
+  align-items: center;
+	height: 100%;
+	width: 100%;
+	border-radius: 15%;
+}
+
+/*hoverable asetetaan vasta ensimmäisen pelin päätyttyä ja poistetaan sitä seuraavia pelejä ennen*/
 .hoverable:hover {
 	height: 200px;
 	width: 200px;
@@ -84,126 +101,56 @@ header button {
 	border: 1px solid;
 }
 
-.hoverable:hover div {
-	background-color: white;
-	height: 100%;
-	width: 100%;
-	border-radius: 15%;
-  text-align: center;
-  font-size: 1.2rem;  
-  line-height: 190px;
-}
-
-
-button {
-  font-size: 0.9rem;
-  border-radius: 7.5%;
-}
-
-button:hover {
-  font-size: 0.95rem;
-  box-shadow: 1px 2px #888888;;
-}
-
-/*//TODO: tee tämä flexillä eli tee fronteista flex-containereita, jotka keskittävät sisältävän <p>:n, mutta fiksaa korttien näyttäminen koska nyt klikkaus asettaa niille displayksi blockin eikä flexiä
-/* //TODO: huomioi että p:n sisältö asetetaan vain ekan pelin yhteydessä eli resetissä muuttunut teksti menee edelleen suoraan diviin, joka nyt on p:n parent
-
-*/
 .text-card {
-	display: none;
-	background-color: white;
-	height: 100%;
-	width: 100%;
-	border-radius: 15%;
-	text-align: center;
-  line-height: 110px;
+  background-color: white;
 }
-
 
 .red-card {
 	background: red;
-	display: none;
-	height: 100%;
-	width: 100%;
-	border-radius: 15%;
 }
 
 .blue-card {
 	background: blue;
-	display: none;
-	height: 100%;
-	width: 100%;
-	border-radius: 15%;
 }
 
 .green-card {
 	background: green;
-	display: none;
-	height: 100%;
-	width: 100%;
-	border-radius: 15%;
 }
 
 .black-card {
 	background: black;
-	display: none;
-	height: 100%;
-	width: 100%;
-	border-radius: 15%;
 }
 
 .white-card {
 	background: white;
-	display: none;
-	height: 100%;
-	width: 100%;
-	border-radius: 15%;
 }
 
 .yellow-card {
 	background: yellow;
-	display: none;
-	height: 100%;
-	width: 100%;
-	border-radius: 15%;
 }
 
 .grey-card {
 	background: grey;
-	display: none;
-	height: 100%;
-	width: 100%;
-	border-radius: 15%;
 }
 
 .orange-card {
 	background: orange;
-	display: none;
-	height: 100%;
-	width: 100%;
-	border-radius: 15%;
 }
 
 .pink-card {
 	background: pink;
-	display: none;
-	height: 100%;
-	width: 100%;
-	border-radius: 15%;
 }
 
 .purple-card {
 	background: purple;
-	display: none;
-	height: 100%;
-	width: 100%;
-	border-radius: 15%;
+}
+
+.hidden {
+  display: none;
 }
 
 /*! tämän luokan on tultava viimeisenä kortteihin liittyvistä luokista, 
 /*! muuten klikkaa-näytä-sulje ei toimi */
-.show {
-	display: block;
-}
-
-
+ .show {
+	display: flex;
+} 

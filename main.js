@@ -1,6 +1,10 @@
-//TODO: ranskan- ja venäjänkielisten sanojen taivutusmuotojen näyttäminen läpäisyn jälkeen:
-  //TODO: pointer-eve
-//TODO: ohjemodaali
+//TODO: taivutusvalikko: toiminnon käyttäminen vain silloin kuin valittu kieli on ranska tai venäjä
+//TODO: taivutusvalikko: toiminto joka estää sen että hover-laajennus tulee käyttöön heti kun hiiri on tekstikortin päällä läpäisyn aikana (ajastin, modaali, nappi?)
+//TODO: taivutusvalikko: taivutusmuototekstin lisääminen läpäisyn jälkeen ja poistaminen jokaisessa restartissa
+//TODO: taivutusvalikko:  ohjetekstin lisääminen pelin läpäisyn jälkeen
+//TODO: taivutusvalikko: voiko hover-laajennuksen tehdä niin että laajennus ei vaikuta eri rivillä olevien korttien väleihin (CSS)?
+
+//TODO: yleinen alkuohjemodaali
 //TODO: perustyylit kuntoon
 //TODO: responsiivinen design
 //TODO: mobiiliversio React nativella?
@@ -14,6 +18,7 @@ let openedCards = [],
     selectedLanguage,
     easyMode,
     newGameOption,
+    colourName,
     fronts,
     backs,
     shuffledCards,
@@ -99,11 +104,11 @@ const initialCards = [
 ]
 
 const addToOpenedCards = function() {
-  if (this.children[0].classList.contains('show')) {
+  if (this.children[0].classList.contains('show') && !this.classList.contains('hoverable')) {
     openedCards.push(this.children[0]);
     openedCards.forEach(openedCard => openedCard.parentNode.style.pointerEvents = 'none');
     moveCounter++;
-    DOMElements.moveCounterDisp.textContent = `${moveCounter}`
+    DOMElements.moveCounterDisp.innerHTML = `${moveCounter}`
   } else {
     openedCards = [];
   }
@@ -132,22 +137,26 @@ const enableClickingInTwoSeconds = () => {
   }, 2000)
 }
 
+const toggleTextCardHoverablity = () => {
+  backs.forEach(back => {
+    if (back.children[0].classList.contains('text-card')) {
+      back.style.pointerEvents = 'auto'
+      back.classList.toggle('hoverable')
+    }
+  }) 
+}
+
 const isGameCompleted = () => {
   let halfOfAllCards = backs.length / 2;
   if (pairCounter === halfOfAllCards) {
-    let timerEndValue = DOMElements.gameTimerDisp.textContent;
+    let timerEndValue = DOMElements.gameTimerDisp.innerHTML;
     clearInterval(gameTimer);
     DOMElements.gameTimerDisp.classList.toggle('hidden');
     DOMElements.moveCounterInfo.classList.toggle("hidden")
     DOMElements.completionMsg.classList.toggle("hidden")
-    DOMElements.completionMsg.textContent = `Löysit kaikki parit ajassa ${timerEndValue} ja käytit yhteensä ${moveCounter} siirtoa`;
+    DOMElements.completionMsg.innerHTML = `Löysit kaikki parit ajassa ${timerEndValue} ja käytit yhteensä ${moveCounter} siirtoa`;
     //! aktivoidaan pointerEventsit hoveria varten
-    backs.forEach(back => {
-      if (back.children[0].classList.contains('text-card')) {
-        back.style.pointerEvents = 'auto'
-        back.classList.add('hoverable')
-      }
-    }) 
+    toggleTextCardHoverablity()
     firstGame = false;
   }
 }
@@ -169,7 +178,9 @@ const checkIfOpenedCardsMatch = () => {
 } 
 
 const showCard = function() {
-  this.children[0].classList.toggle('show');
+  if (!this.classList.contains('hoverable')) {
+    this.children[0].classList.toggle('show');
+  }
 }
 
 const setupCardListeners = () => {
@@ -269,12 +280,11 @@ const setupCards = () => {
   fronts.forEach((front, index) => {
     front.setAttribute('pairID', shuffledCards[index].pairID);
     //! ed. pelissä asetettu teksti pois kortista, joka on nyt värikortti
-    if (!firstGame) front.innerHTML = ''; 
+    if (!firstGame) front.firstElementChild.innerHTML = ''; 
     if (shuffledCards[index].colour) {
       front.classList.add(`${shuffledCards[index].colour}-card`);
     } else {
       front.classList.add('text-card');
-      let colourName;
       //! turha block A ja B -reseteissä
       if (selectedLanguage === 'english') {
         colourName = shuffledCards[index].english;
@@ -285,7 +295,7 @@ const setupCards = () => {
       if (selectedLanguage === 'russian'){ 
         colourName = shuffledCards[index].russian;
       }
-      front.firstElementChild.innerHTML = `${colourName}`;
+      front.firstElementChild.innerHTML = `${colourName}`; //! teksti p-tagin sisään
     }
   });
 };
@@ -311,9 +321,9 @@ const setupGame = () => {
 const startGameWithCountdown = () => {
   let time = 2;
   DOMElements.countDownTimer.style.display = 'block';
-  DOMElements.countDownTimer.textContent = `${3}`
+  DOMElements.countDownTimer.innerHTML = `${3}`
   const timer = setInterval(() => {
-    DOMElements.countDownTimer.textContent = `${time}`
+    DOMElements.countDownTimer.innerHTML = `${time}`
     if (time === -1) {
       clearInterval(timer);
       setupGame();
@@ -328,12 +338,13 @@ const resetGameWithOptions = event => {
   openedCards = [];
   pairCounter = 0;
   moveCounter = 0;
-  DOMElements.moveCounterDisp.textContent = '0';
+  firstGame = false;
+  DOMElements.moveCounterDisp.innerHTML = '0';
   DOMElements.completionMsg.classList.toggle("hidden")
   DOMElements.newGameButtons.classList.toggle("hidden");
   DOMElements.easyGrid.classList.add('hidden');
   DOMElements.difficultGrid.classList.add('hidden');
-  firstGame = false;
+  toggleTextCardHoverablity()
   newGameOption = event.target.dataset.newgameoption;
   if (newGameOption === 'playAgain') { 
     startGameWithCountdown()
@@ -353,7 +364,7 @@ const resetGameWithOptions = event => {
 
 const startGameTimer = () => {
   DOMElements.gameTimerDisp.classList.toggle('hidden');
-  DOMElements.gameTimerDisp.textContent = '00:00'
+  DOMElements.gameTimerDisp.innerHTML = '00:00'
 
   const createTimeFormat = (seconds, minutes) => {
     if (minutes < 10) {
@@ -370,7 +381,7 @@ const startGameTimer = () => {
   let minutes = 0;
   
   gameTimer = setInterval(() => {
-    DOMElements.gameTimerDisp.textContent = `${createTimeFormat(seconds, minutes)}`
+    DOMElements.gameTimerDisp.innerHTML = `${createTimeFormat(seconds, minutes)}`
     if (seconds === 59) {
       minutes++;
       seconds = seconds - 60;
