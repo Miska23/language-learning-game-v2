@@ -1,11 +1,14 @@
-//TODO: taivutusvalikko: toiminnon käyttäminen vain silloin kuin valittu kieli on ranska tai venäjä
-//TODO: taivutusvalikko: toiminto joka estää sen että hover-laajennus tulee käyttöön heti kun hiiri on tekstikortin päällä läpäisyn aikana (ajastin, modaali, nappi?)
-//TODO: taivutusvalikko: taivutusmuototekstin lisääminen läpäisyn jälkeen ja poistaminen jokaisessa restartissa
-//TODO: taivutusvalikko:  ohjetekstin lisääminen pelin läpäisyn jälkeen
-//TODO: taivutusvalikko: voiko hover-laajennuksen tehdä niin että laajennus ei vaikuta eri rivillä olevien korttien väleihin (CSS)?
+//TODO: taivutusvalikko: lisää modaliin viittaus hover-juttuun ehdollisesti
+//TODO: taivutusvalikko: tarkista että käytetyt värisanat ovat yleisimmät värit eri kielillä
+//TODO: taivutusvalikko: taivutusmuototekstin lisääminen fronteista läpäisyn jälkeen ja poistaminen jokaisessa restartissa
+//TODO: taivutusvalikko: voittoilmoituksen poistaminen nappien alta
 
 //TODO: yleinen alkuohjemodaali
-//TODO: perustyylit kuntoon
+
+//TODO: tyylit: modalin asettelu siten että se on aina vasen - oikea -akselilla keskellä ja suhteellisen ylhäällä
+//TODO: tyylit: voiko hover-laajennuksen tehdä niin että laajennus ei vaikuta eri rivillä olevien korttien väleihin (CSS)?
+//TODO: tyylit: perustyylit kuntoon
+//TODO: tyylit: kielivalinnan mukaan vaihtuva taustaväri joka vastaa lipun väriä
 //TODO: responsiivinen design
 //TODO: mobiiliversio React nativella?
 
@@ -153,10 +156,16 @@ const isGameCompleted = () => {
     clearInterval(gameTimer);
     DOMElements.gameTimerDisp.classList.toggle('hidden');
     DOMElements.moveCounterInfo.classList.toggle("hidden")
-    DOMElements.completionMsg.classList.toggle("hidden")
+    DOMElements.completionMsg.classList.toggle("hidden")    
     DOMElements.completionMsg.innerHTML = `Löysit kaikki parit ajassa ${timerEndValue} ja käytit yhteensä ${moveCounter} siirtoa`;
-    //! aktivoidaan pointerEventsit hoveria varten
-    toggleTextCardHoverablity()
+    //! modalin näyttäminen:
+    DOMElements.modalBackdrop.classList.toggle("hidden")
+    DOMElements.modalBox.style.display = 'flex'
+    DOMElements.modalContent.firstElementChild.innerHTML = `Löysit kaikki parit ajassa ${timerEndValue} ja käytit yhteensä ${moveCounter} siirtoa`;
+    
+    if (selectedLanguage === 'french' || selectedLanguage === 'russian') {
+      toggleTextCardHoverablity()
+    }
     firstGame = false;
   }
 }
@@ -334,6 +343,11 @@ const startGameWithCountdown = () => {
   }, 1000)
 }
 
+const closeModal = () => {
+  DOMElements.modalBackdrop.classList.toggle('hidden');
+  DOMElements.modalBox.style.display = 'none';
+}
+
 const resetGameWithOptions = event => {
   openedCards = [];
   pairCounter = 0;
@@ -344,7 +358,9 @@ const resetGameWithOptions = event => {
   DOMElements.newGameButtons.classList.toggle("hidden");
   DOMElements.easyGrid.classList.add('hidden');
   DOMElements.difficultGrid.classList.add('hidden');
-  toggleTextCardHoverablity()
+  if (selectedLanguage === 'french' || selectedLanguage === 'russian') {
+    toggleTextCardHoverablity()
+  }
   newGameOption = event.target.dataset.newgameoption;
   if (newGameOption === 'playAgain') { 
     startGameWithCountdown()
@@ -394,5 +410,6 @@ const setupButtons = (function() {
   DOMElements.langButtons.forEach(langButton => langButton.addEventListener('click', selectLanguage))
   DOMElements.modeButtons.forEach(modeButton => modeButton.addEventListener('click', selectMode))
   DOMElements.newGameButtons.addEventListener('click', resetGameWithOptions);
+  DOMElements.modalBackdrop.addEventListener('click', closeModal);
 })(); 
 

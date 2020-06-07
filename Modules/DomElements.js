@@ -1,3 +1,9 @@
+export const modalBackdrop = document.getElementById('modal-backdrop');
+
+export const modalBox = document.getElementById('modal-box');
+
+export const modalContent = document.getElementById('modal-content');
+
 export const startInfo = document.getElementById('start-info');
 
 export const langButtons = document.querySelectorAll(".language-button");

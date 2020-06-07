@@ -59,6 +59,34 @@ button:hover {
   font-size: 2.25rem;
 } 
 
+#modal-backdrop {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: black;
+  opacity: 50%;
+}
+
+#modal-box  {
+  position: absolute;
+  display: none;
+  margin: 100px 200px 400px 200px;
+  width: 600px;
+  height: 300px;
+  border: 1px solid black;
+  background-color: white;
+  z-index: 1;
+}
+
+#modal-content {
+  text-align: center;
+  margin: 15% 15%;
+	height: 100%;
+	width: 100%;
+}
+
 .card-container {
   display: grid;
 	grid-template-columns: repeat(5, 1fr);
