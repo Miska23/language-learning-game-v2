@@ -1,10 +1,6 @@
-//TODO: taivutusvalikko: lisää modaliin viittaus hover-juttuun ehdollisesti
 //TODO: taivutusvalikko: tarkista että käytetyt värisanat ovat yleisimmät värit eri kielillä
 //TODO: taivutusvalikko: taivutusmuototekstin lisääminen fronteista läpäisyn jälkeen ja poistaminen jokaisessa restartissa
-//TODO: taivutusvalikko: voittoilmoituksen poistaminen nappien alta
-
 //TODO: yleinen alkuohjemodaali
-
 //TODO: tyylit: modalin asettelu siten että se on aina vasen - oikea -akselilla keskellä ja suhteellisen ylhäällä
 //TODO: tyylit: voiko hover-laajennuksen tehdä niin että laajennus ei vaikuta eri rivillä olevien korttien väleihin (CSS)?
 //TODO: tyylit: perustyylit kuntoon
@@ -140,7 +136,23 @@ const enableClickingInTwoSeconds = () => {
   }, 2000)
 }
 
-const toggleTextCardHoverablity = () => {
+const showModal = () => {
+  let timerEndValue = DOMElements.gameTimerDisp.innerHTML;
+  if (selectedLanguage === 'french' || selectedLanguage === 'russian') {
+    DOMElements.modalContent.firstElementChild.innerHTML = `Löysit kaikki parit ajassa ${timerEndValue} ja käytit yhteensä ${moveCounter} siirtoa. Jos pelasit ranskan tai venäjän kielellä, voit viedä hiiren sanakorttien päälle ja katsoa sanan muut taivutusmuodot`;
+  } else {
+    DOMElements.modalContent.firstElementChild.innerHTML = `Löysit kaikki parit ajassa ${timerEndValue} ja käytit yhteensä ${moveCounter} siirtoa`;
+  }
+  DOMElements.modalBackdrop.classList.toggle("hidden")
+  DOMElements.modalBox.style.display = 'flex'
+}
+
+const closeModal = () => {
+  DOMElements.modalBackdrop.classList.toggle('hidden');
+  DOMElements.modalBox.style.display = 'none';
+}
+
+const toggleHoverAction = () => {
   backs.forEach(back => {
     if (back.children[0].classList.contains('text-card')) {
       back.style.pointerEvents = 'auto'
@@ -157,14 +169,10 @@ const isGameCompleted = () => {
     DOMElements.gameTimerDisp.classList.toggle('hidden');
     DOMElements.moveCounterInfo.classList.toggle("hidden")
     DOMElements.completionMsg.classList.toggle("hidden")    
-    DOMElements.completionMsg.innerHTML = `Löysit kaikki parit ajassa ${timerEndValue} ja käytit yhteensä ${moveCounter} siirtoa`;
-    //! modalin näyttäminen:
-    DOMElements.modalBackdrop.classList.toggle("hidden")
-    DOMElements.modalBox.style.display = 'flex'
-    DOMElements.modalContent.firstElementChild.innerHTML = `Löysit kaikki parit ajassa ${timerEndValue} ja käytit yhteensä ${moveCounter} siirtoa`;
-    
+    DOMElements.completionMsg.innerHTML = `Edellisessä pelissä käytetty aika: ${timerEndValue} Edellisessä pelissä käytetyt siirrot: ${moveCounter}`;
+    setTimeout(showModal, 750)
     if (selectedLanguage === 'french' || selectedLanguage === 'russian') {
-      toggleTextCardHoverablity()
+      setTimeout(toggleHoverAction, 850)
     }
     firstGame = false;
   }
@@ -343,11 +351,6 @@ const startGameWithCountdown = () => {
   }, 1000)
 }
 
-const closeModal = () => {
-  DOMElements.modalBackdrop.classList.toggle('hidden');
-  DOMElements.modalBox.style.display = 'none';
-}
-
 const resetGameWithOptions = event => {
   openedCards = [];
   pairCounter = 0;
@@ -359,7 +362,7 @@ const resetGameWithOptions = event => {
   DOMElements.easyGrid.classList.add('hidden');
   DOMElements.difficultGrid.classList.add('hidden');
   if (selectedLanguage === 'french' || selectedLanguage === 'russian') {
-    toggleTextCardHoverablity()
+    toggleHoverAction()
   }
   newGameOption = event.target.dataset.newgameoption;
   if (newGameOption === 'playAgain') { 
@@ -411,5 +414,6 @@ const setupButtons = (function() {
   DOMElements.modeButtons.forEach(modeButton => modeButton.addEventListener('click', selectMode))
   DOMElements.newGameButtons.addEventListener('click', resetGameWithOptions);
   DOMElements.modalBackdrop.addEventListener('click', closeModal);
+  DOMElements.modalCloseBtn.addEventListener('click', closeModal);
 })(); 
 

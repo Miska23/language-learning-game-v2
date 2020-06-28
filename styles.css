@@ -16,7 +16,6 @@ header button {
   margin: 3,33%;
 }
 
-
 button {
   font-size: 0.9rem;
   border-radius: 7.5%;
@@ -71,6 +70,7 @@ button:hover {
 
 #modal-box  {
   position: absolute;
+  flex-direction: column;
   display: none;
   margin: 100px 200px 400px 200px;
   width: 600px;
@@ -83,8 +83,20 @@ button:hover {
 #modal-content {
   text-align: center;
   margin: 15% 15%;
-	height: 100%;
+	height: 90%;
 	width: 100%;
+}
+
+#modal-content p{
+
+	width: 66%;
+}
+
+#close-modal-button {
+  padding: 5px 5px;
+  height: 10%;
+  margin: auto;
+  width: 10%;
 }
 
 .card-container {
