@@ -1,8 +1,8 @@
+//TODO: korvaa korttien suurentamisanimaatio toiminnolla, jossa sanakortteihin tulee ikoni josta tulee näkyviin taiv.muodot (ikonissa itsessään voi olla animaatio)
 //TODO: taivutusvalikko: tarkista että käytetyt värisanat ovat yleisimmät värit eri kielillä
 //TODO: taivutusvalikko: taivutusmuototekstin lisääminen fronteista läpäisyn jälkeen ja poistaminen jokaisessa restartissa
 //TODO: yleinen alkuohjemodaali
 //TODO: tyylit: modalin asettelu siten että se on aina vasen - oikea -akselilla keskellä ja suhteellisen ylhäällä
-//TODO: tyylit: voiko hover-laajennuksen tehdä niin että laajennus ei vaikuta eri rivillä olevien korttien väleihin (CSS)?
 //TODO: tyylit: perustyylit kuntoon
 //TODO: tyylit: kielivalinnan mukaan vaihtuva taustaväri joka vastaa lipun väriä
 //TODO: responsiivinen design
@@ -152,11 +152,23 @@ const closeModal = () => {
   DOMElements.modalBox.style.display = 'none';
 }
 
+const addMoreInfoIcon = () => {
+  fronts.forEach(front => {
+    if (this.classList.contains('text-card')) {
+      //* luo elementti johon ikoni tulee
+      //* luo ikoni
+      //* lisää ikoni elementtiin
+      //* lisää elementti fronttiin
+    }
+  })
+}
+
 const toggleHoverAction = () => {
   backs.forEach(back => {
     if (back.children[0].classList.contains('text-card')) {
       back.style.pointerEvents = 'auto'
-      back.classList.toggle('hoverable')
+      //* back.classList.toggle('hoverable')
+
     }
   }) 
 }
@@ -171,6 +183,7 @@ const isGameCompleted = () => {
     DOMElements.completionMsg.classList.toggle("hidden")    
     DOMElements.completionMsg.innerHTML = `Edellisessä pelissä käytetty aika: ${timerEndValue} Edellisessä pelissä käytetyt siirrot: ${moveCounter}`;
     setTimeout(showModal, 750)
+    //* ikonin asettamisfunktio tässä blokissa
     if (selectedLanguage === 'french' || selectedLanguage === 'russian') {
       setTimeout(toggleHoverAction, 850)
     }
